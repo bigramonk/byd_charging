@@ -1,0 +1,61 @@
+force_byd_charging:
+  alias: Force charging
+  sequence:
+  # Set StorCtl_Mod bit 1
+  - service: modbus.write_register
+    data:
+      slave: 1
+      address: 40348
+      value: 2
+      hub: gen24
+  - if: "{{ states('sensor.chastate')|int(0) < 10 }}"
+    then:
+    - service: modbus.write_register
+      data:
+        address: 40355
+        slave: 1
+        value: 55536
+        hub: gen24
+    else:
+    # Set max discharge rate to
+    # -100% => 65536 - 10000 = 55536
+    # -50% => 65536 - 5000 = 60536
+    - service: modbus.write_register
+      data:
+        address: 40355
+        slave: 1
+        value: "{{ states('sensor.outwrte_charging_value')|int(62536) }}"
+        hub: gen24
+  # Set MinRsvPct to 99%
+  - service: modbus.write_register
+    data:
+      slave: 1
+      address: 40350
+      value: 9900
+      hub: gen24
+  mode: single
+  icon: mdi:battery-charging
+
+reset_byd_charging:
+  alias: Reset charging
+  sequence:
+  - service: modbus.write_register
+    data:
+      address: 40355
+      slave: 1
+      value: 10000
+      hub: gen24
+  - service: modbus.write_register
+    data:
+      slave: 1
+      address: 40350
+      value: 500
+      hub: gen24
+  - service: modbus.write_register
+    data:
+      slave: 1
+      address: 40348
+      value: 0
+      hub: gen24
+  mode: single
+  icon: mdi:home-battery

@@ -1,0 +1,34 @@
+#
+# Battery sensors
+#
+- platform: template
+  sensors:
+    chastate_sf:
+      friendly_name: ChaState_SF (Scale factor for available energy percent)
+      value_template: "{{ states('sensor.reading_battery_settings').split(',')[20] }}"
+    chastate:
+      friendly_name: ChaState (Currently available energy as a percent of the capacity rating)
+      value_template: "{{ states('sensor.reading_battery_settings').split(',')[6] |int(0) * 10** states('sensor.chastate_sf')|int(0) }}"
+      unit_of_measurement: '%'
+      icon_template: >-
+        {% if states('sensor.chastate')|int(0) < 31 %}
+          mdi:battery-20
+        {% elif states('sensor.chastate')|int(0) < 51 %}
+          mdi:battery-40
+        {% elif states('sensor.chastate')|int(0) < 76 %}
+          mdi:battery-60
+        {% elif states('sensor.chastate')|int(0) < 100 %}
+          mdi:battery-90
+        {% else %}
+          mdi:battery
+        {% endif %}
+    outwrte_charging_value:
+      friendly_name: OutWRte charging value
+      value_template: "{{ 65536 - (states('input_number.forced_charging_power')|int(0) / states('sensor.wchamax')|int(1) * 10000)|int }}"
+    wchamax:
+      friendly_name: WChaMax (Setpoint for maximum charge)
+      value_template: "{{ states('sensor.reading_battery_settings').split(',')[0]|int(0) }}"
+      unit_of_measurement: W
+    wchamax_sf:
+      friendly_name: WChaMax_SF (Scale factor for maximum charge)
+      value_template: "{{ states('sensor.reading_battery_settings').split(',')[16] }}"

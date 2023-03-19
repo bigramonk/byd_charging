@@ -1,0 +1,9 @@
+#
+# Requested battery charging speed
+#
+forced_charging_power:
+  name: forced charging power (W)
+  icon: mdi:gauge
+  min: 1000
+  max: 6000
+  step: 250

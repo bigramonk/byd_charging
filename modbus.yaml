@@ -1,0 +1,46 @@
+- type: tcp
+  # Put your Gen24 IP address here
+  host: 192.168.250.20
+  port: 502
+  name: gen24
+  sensors:
+#
+# Battery
+#
+#    - name: current_battery_mode
+#      slave: 1
+#      address: 40354
+#      scan_interval: 10
+#      count: 1
+#      data_type: uint16
+    - name: reading_battery_settings
+      slave: 1
+      count: 24
+      address: 40345
+      scan_interval: 5
+      data_type: custom
+      structure: ">10H2h4H8h"
+      # WChaMax
+      # WChaGra
+      # WDisChaGra
+      # StorCtl_Mod
+      # VAChaMax
+      # MinRsvPct
+      # ChaState
+      # StorAval
+      # InBatV
+      # ChaSt
+      # OutWRte
+      # InWRte
+      # InOutWRte_WinTms
+      # InOutWRte_RvrtTms
+      # InOutWRte_RmpTms
+      # ChaGriSet
+      # WChaMax_SF
+      # WChaDisChaGra_SF
+      # VAChaMax_SF
+      # MinRsvPct_SF
+      # ChaState_SF
+      # StorAval_SF
+      # InBatV_SF
+      # InOutWRte_SF
